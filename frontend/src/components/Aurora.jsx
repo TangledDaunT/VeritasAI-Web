@@ -194,7 +194,7 @@ export default function Aurora(props) {
       }
       gl.getExtension('WEBGL_lose_context')?.loseContext();
     };
-  }, [amplitude]);
+  }, []);
 
   return <div ref={ctnDom} className="aurora-container" />;
 }
