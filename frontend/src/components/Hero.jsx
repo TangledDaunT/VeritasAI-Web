@@ -2,7 +2,7 @@ import React, { useRef } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { ChevronRight } from 'lucide-react';
 import { Button } from './ui/button';
-import Aurora from './Aurora';
+// import Aurora from './Aurora';
 import SearchBar from './SearchBar';
 
 const Hero = () => {
