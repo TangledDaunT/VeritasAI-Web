@@ -1,10 +1,11 @@
 import React, { useEffect } from 'react';
+import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
+import { AnimatePresence, motion } from 'framer-motion';
 import Navbar from './components/Navbar';
-import Hero from './components/Hero';
-import ValueProp from './components/ValueProp';
-import Features from './components/Features';
-import Architecture from './components/Architecture';
 import Footer from './components/Footer';
+import Home from './pages/Home';
+import About from './pages/About';
+import Contact from './pages/Contact';
 
 // Starfield Background Component
 const Starfield = () => {
@@ -45,19 +46,42 @@ const Starfield = () => {
   return <div id="star-container" className="star-container"></div>;
 };
 
+function PageWrapper({ children }) {
+  return (
+    <motion.main
+      initial={{ opacity: 0, y: 8 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: 8 }}
+      transition={{ duration: 0.42, ease: [0.16, 1, 0.3, 1] }}
+    >
+      {children}
+    </motion.main>
+  );
+}
+
+function AnimatedRoutes() {
+  const location = useLocation();
+  return (
+    <AnimatePresence mode="wait">
+      <Routes location={location} key={location.pathname}>
+        <Route path="/" element={<PageWrapper><Home /></PageWrapper>} />
+        <Route path="/about" element={<PageWrapper><About /></PageWrapper>} />
+        <Route path="/contact" element={<PageWrapper><Contact /></PageWrapper>} />
+      </Routes>
+    </AnimatePresence>
+  );
+}
+
 function App() {
   return (
-    <div className="min-h-screen bg-background text-foreground overflow-hidden font-sans selection:bg-primary/30 selection:text-white">
-      <Starfield />
-      <Navbar />
-      <main>
-        <Hero />
-        <ValueProp />
-        <Features />
-        <Architecture />
-      </main>
-      <Footer />
-    </div>
+    <Router>
+      <div className="min-h-screen bg-background text-foreground overflow-hidden font-sans selection:bg-primary/30 selection:text-white">
+        <Starfield />
+        <Navbar />
+        <AnimatedRoutes />
+        <Footer />
+      </div>
+    </Router>
   );
 }
 

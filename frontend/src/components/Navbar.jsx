@@ -1,15 +1,27 @@
 import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
+import { Link } from 'react-router-dom';
 import { Scale, Shield, Menu, X } from 'lucide-react';
 import { Button } from './ui/button';
 
 const Navbar = () => {
   const [scrolled, setScrolled] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
+  const [visible, setVisible] = useState(true);
 
   useEffect(() => {
+    let lastY = window.scrollY;
     const handleScroll = () => {
-      setScrolled(window.scrollY > 50);
+      const y = window.scrollY;
+      setScrolled(y > 50);
+      if (y > lastY && y > 80) {
+        // scrolling down
+        setVisible(false);
+      } else {
+        // scrolling up
+        setVisible(true);
+      }
+      lastY = y;
     };
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
@@ -18,20 +30,23 @@ const Navbar = () => {
   return (
     <motion.nav
       initial={{ y: -100 }}
-      animate={{ y: 0 }}
+      animate={{ y: visible ? 0 : -120 }}
+      transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
       className={`fixed top-0 w-full z-50 transition-all duration-300 ${
         scrolled ? 'bg-background/80 backdrop-blur-lg border-b border-white/10 h-16' : 'bg-transparent h-20'
       }`}
     >
       <div className="container mx-auto px-6 h-full flex items-center justify-between">
         {/* Logo */}
-        <div className="flex items-center gap-2 cursor-pointer">
-          <div className="p-2 rounded-lg bg-gradient-to-br from-gray-700 to-black border border-gray-600 shadow-lg shadow-primary/10">
-             <Scale className="w-6 h-6 text-gray-200" />
-          </div>
-          <span className="text-xl font-bold tracking-wide text-gray-100">
-            LegalLaw<span className="text-gray-400">Advisor</span>
-          </span>
+        <div className="flex items-center gap-2">
+          <Link to="/" className="flex items-center gap-2">
+            <div className="p-2 rounded-lg bg-gradient-to-br from-gray-700 to-black border border-gray-600 shadow-lg shadow-primary/10">
+               <Scale className="w-6 h-6 text-gray-200" />
+            </div>
+            <span className="text-xl font-bold tracking-wide text-gray-100">
+              LegalLaw<span className="text-gray-400">Advisor</span>
+            </span>
+          </Link>
         </div>
 
         {/* Desktop Links */}
@@ -49,9 +64,11 @@ const Navbar = () => {
 
         {/* CTA */}
         <div className="hidden md:block">
-          <Button className="bg-white text-black hover:bg-gray-200 transition-all font-semibold rounded-full px-6">
-            Get Access
-          </Button>
+          <Link to="/contact">
+            <Button className="bg-white text-black hover:bg-gray-200 transition-all font-semibold rounded-full px-6">
+              Get Access
+            </Button>
+          </Link>
         </div>
 
         {/* Mobile Menu Button */}
@@ -80,7 +97,9 @@ const Navbar = () => {
                 {item}
               </a>
             ))}
-            <Button className="w-full bg-white text-black mt-4">Get Access</Button>
+            <Link to="/contact">
+              <Button className="w-full bg-white text-black mt-4">Get Access</Button>
+            </Link>
           </div>
         </motion.div>
       )}
